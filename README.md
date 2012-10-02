@@ -21,6 +21,11 @@ gem install fluent-plugin-twitter
 
 ### Sample
 `````
+<source>
+  type http
+  port 8888
+</source>
+
 <match notify.twitter>
   type twitter
   consumer_key        YOUR_CONSUMER_KEY
@@ -29,6 +34,16 @@ gem install fluent-plugin-twitter
   oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET
 </match>
 `````
+
+## Debug
+`````
+$ curl http://localhost:8888/notify.twitter -F 'json={"message":"foo"}'
+`````
+
+## Reference
+
+### Twitter OAuth Guide
+http://pocketstudio.jp/log3/2012/02/12/how_to_get_twitter_apikey_and_token/
 
 ## TODO
 patches welcome!
