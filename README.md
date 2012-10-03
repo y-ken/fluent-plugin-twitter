@@ -1,8 +1,9 @@
 fluent-plugin-twitter
 =====================
-
-## Overview
 create your own twitter bot with fluentd
+
+## Component
+Fluentd Output plugin. You can create your own "Twitter Bot" with fluentd messaging system.
 
 ## Installation
 
