@@ -1,6 +1,5 @@
 fluent-plugin-twitter
 =====================
-create your own twitter bot with fluentd
 
 ## Component
 Fluentd Output plugin. You can create your own "Twitter Bot" with fluentd messaging system.
@@ -47,6 +46,7 @@ $ curl http://localhost:8888/notify.twitter -F 'json={"message":"foo"}'
 http://pocketstudio.jp/log3/2012/02/12/how_to_get_twitter_apikey_and_token/
 
 ## TODO
+* support stream input (ex: timeline)
 patches welcome!
 
 ## Copyright
