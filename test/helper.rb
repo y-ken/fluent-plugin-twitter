@@ -23,6 +23,7 @@ unless ENV.has_key?('VERBOSE')
 end
 
 require 'fluent/plugin/out_twitter'
+require 'fluent/plugin/in_twitter'
 
 class Test::Unit::TestCase
 end
