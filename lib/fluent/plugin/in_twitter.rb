@@ -57,6 +57,16 @@ module Fluent
       end
     end
 
+    def start_twitter_sample
+      $log.info "starting twitter sampled streaming. tag:#{@tag} lang:#{@lang}"
+      client = TweetStream::Client.new
+      client.sample do |status|
+        next unless status.text
+        next unless @lang.include?(status.user.lang)
+        get_message(status)
+      end
+    end
+
     def start_twitter_userstream
       $log.info "starting twitter userstream tracking. tag:#{@tag} lang:#{@lang}"
       client = TweetStream::Client.new
@@ -66,16 +76,6 @@ module Fluent
         get_message(status)
       end
     end
-
-    def start_twitter_sample
-      $log.info "starting twitter sampled streaming. tag:#{@tag} lang:#{@lang}"
-      client = TweetStream::Client.new
-      client.sample do |status|
-        next unless status.text
-        next unless @lang.include?(status.user.lang)
-        get_message(status)
-      end
-    end 
 
     def get_message(status)
       record = Hash.new

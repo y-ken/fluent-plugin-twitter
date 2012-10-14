@@ -3,11 +3,11 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-twitter"
-  s.version     = "0.0.1"
+  s.version     = "0.1.1"
   s.authors     = ["Kentaro Yoshida"]
   s.email       = ["y.ken.studio@gmail.com"]
   s.homepage    = "https://github.com/y-ken/fluent-plugin-twitter"
-  s.summary     = %q{Fluentd Output plugin. You can create your own "Twitter Bot" with fluentd messaging system.}
+  s.summary     = %q{Fluentd Input/Output plugin. You can create your own "Twitter Bot" with fluentd messaging system.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

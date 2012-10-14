@@ -29,7 +29,7 @@ gem install fluent-plugin-twitter
   oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET # Required
   tag                 input.twitter.sampling  # Required
   timeline            sampling                # Required (sampling or userstream)
-  keyword             Ruby                    # Optional
+  keyword             Ruby,Python             # Optional (userstream not supported yet)
   lang                ja,en                   # Optional
 </source>
 
@@ -38,7 +38,7 @@ gem install fluent-plugin-twitter
 </match>
 `````
 
-## Debug
+### Debug
 `````
 $ tail -f /var/log/td-agent/td-agent.log
 `````
@@ -61,7 +61,7 @@ $ tail -f /var/log/td-agent/td-agent.log
 </match>
 `````
 
-## Debug
+### Debug
 `````
 $ curl http://localhost:8888/notify.twitter -F 'json={"message":"foo"}'
 `````
@@ -73,6 +73,10 @@ http://pocketstudio.jp/log3/2012/02/12/how_to_get_twitter_apikey_and_token/
 
 ## TODO
 patches welcome!
+
+## Known Issue
+On starting fluentd, appearing alert message below. Please tell me how to fix up.
+`/usr/lib64/fluent/ruby/lib/ruby/gems/1.9.1/gems/eventmachine-1.0.0/lib/eventmachine.rb:1530: warning: already initialized constant EM`
 
 ## Copyright
 
