@@ -1,4 +1,9 @@
 module Fluent
+  class RawJsonParser
+    def parser(hash)
+      return hash
+    end
+  end
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling)
     Plugin.register_input('twitter', self)
@@ -11,6 +16,7 @@ module Fluent
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
     config_param :lang, :string, :default => ''
+    config_param :raw_json, :bool, :default => false
 
     def initialize
       super
@@ -26,6 +32,7 @@ module Fluent
         config.oauth_token = @oauth_token
         config.oauth_token_secret = @oauth_token_secret
         config.auth_method = :oauth
+        config.parser = RawJsonParser if @raw_json
       end
     end
 
@@ -51,8 +58,7 @@ module Fluent
       $log.info "starting twitter keyword tracking. tag:#{@tag} lang:#{@lang} keyword:#{@keyword}"
       client = TweetStream::Client.new
       client.track(@keyword) do |status|
-        next unless status.text
-        next unless @lang.include?(status.user.lang)
+        next unless is_message?(status)
         get_message(status)
       end
     end
@@ -61,8 +67,7 @@ module Fluent
       $log.info "starting twitter sampled streaming. tag:#{@tag} lang:#{@lang}"
       client = TweetStream::Client.new
       client.sample do |status|
-        next unless status.text
-        next unless @lang.include?(status.user.lang)
+        next unless is_message?(status)
         get_message(status)
       end
     end
@@ -71,23 +76,37 @@ module Fluent
       $log.info "starting twitter userstream tracking. tag:#{@tag} lang:#{@lang}"
       client = TweetStream::Client.new
       client.userstream do |status|
-        next unless status.text
-        next unless @lang.include?(status.user.lang)
+        next unless is_message?(status)
         get_message(status)
       end
     end
 
+    def is_message?(status)
+      if @raw_json
+        return false if !status.include?(:text)
+        return false if @lang.size > 0 && !@lang.include?(status[:user][:lang])
+      else
+        return false if !status.text
+        return false if @lang.size > 0 && !@lang.include?(status.user.lang)
+      end
+      return true
+    end
+
     def get_message(status)
-      record = Hash.new
-      record.store('message', status.text)
-      record.store('geo', status.geo)
-      record.store('place', status.place)
-      record.store('created_at', status.created_at)
-      record.store('user_name', status.user.name)
-      record.store('user_screen_name', status.user.screen_name)
-      record.store('user_profile_image_url', status.user.profile_image_url)
-      record.store('user_time_zone', status.user.time_zone)
-      record.store('user_lang', status.user.lang)
+      if @raw_json
+        record = status
+      else
+        record = Hash.new
+        record.store('message', status.text)
+        record.store('geo', status.geo)
+        record.store('place', status.place)
+        record.store('created_at', status.created_at)
+        record.store('user_name', status.user.name)
+        record.store('user_screen_name', status.user.screen_name)
+        record.store('user_profile_image_url', status.user.profile_image_url)
+        record.store('user_time_zone', status.user.time_zone)
+        record.store('user_lang', status.user.lang)
+      end
       Engine.emit(@tag, Engine.now, record)
     end
   end
