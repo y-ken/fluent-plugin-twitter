@@ -1,9 +1,4 @@
 module Fluent
-  class RawJsonParser
-    def parser(hash)
-      return hash
-    end
-  end
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling)
     Plugin.register_input('twitter', self)
@@ -32,12 +27,16 @@ module Fluent
         config.oauth_token = @oauth_token
         config.oauth_token_secret = @oauth_token_secret
         config.auth_method = :oauth
-        config.parser = RawJsonParser if @raw_json
       end
     end
 
     def start
       @thread = Thread.new(&method(:run))
+      @any = Proc.new do |hash|
+        if @raw_json
+          get_message(hash) if is_message?(hash)
+        end
+      end
     end
 
     def shutdown
@@ -57,37 +56,41 @@ module Fluent
     def start_twitter_track
       $log.info "starting twitter keyword tracking. tag:#{@tag} lang:#{@lang} keyword:#{@keyword}"
       client = TweetStream::Client.new
+      client.on_anything(&@any) if @raw_json
       client.track(@keyword) do |status|
         next unless is_message?(status)
-        get_message(status)
+        get_message(status) if !@raw_json
       end
     end
 
     def start_twitter_sample
       $log.info "starting twitter sampled streaming. tag:#{@tag} lang:#{@lang}"
       client = TweetStream::Client.new
+      client.on_anything(&@any) if @raw_json
       client.sample do |status|
         next unless is_message?(status)
-        get_message(status)
+        get_message(status) if !@raw_json
       end
     end
 
     def start_twitter_userstream
       $log.info "starting twitter userstream tracking. tag:#{@tag} lang:#{@lang}"
       client = TweetStream::Client.new
+      client.on_anything(&@any) if @raw_json
       client.userstream do |status|
         next unless is_message?(status)
-        get_message(status)
+        get_message(status) if !@raw_json
       end
     end
 
     def is_message?(status)
-      if @raw_json
-        return false if !status.include?(:text)
-        return false if @lang.size > 0 && !@lang.include?(status[:user][:lang])
-      else
+      if status.instance_of?(Twitter::Tweet)
         return false if !status.text
         return false if @lang.size > 0 && !@lang.include?(status.user.lang)
+      elsif @raw_json && status.instance_of?(Hash)
+        return false if !status.include?(:text)
+        return false if !status.include?(:user)
+        return false if @lang.size > 0 && !@lang.include?(status[:user][:lang])
       end
       return true
     end
