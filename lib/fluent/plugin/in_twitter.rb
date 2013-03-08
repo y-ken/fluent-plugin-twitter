@@ -97,7 +97,7 @@ module Fluent
 
     def get_message(status)
       if @raw_json
-        record = status
+        record = status.inject({}){|f,(k,v)| f[k.to_s] = v; f}
       else
         record = Hash.new
         record.store('message', status.text)
