@@ -30,7 +30,8 @@ gem install fluent-plugin-twitter
   tag                 input.twitter.sampling  # Required
   timeline            sampling                # Required (sampling or userstream)
   keyword             Ruby,Python             # Optional (userstream not supported yet)
-  lang                ja,en                   # Optional
+  lang                ja,en                   # Optional (default none)
+  format              raw                     # Optional (default compact)
 </source>
 
 <match input.twitter.sampling>
