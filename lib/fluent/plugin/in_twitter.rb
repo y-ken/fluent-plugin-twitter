@@ -11,7 +11,7 @@ module Fluent
     config_param :tag, :string
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
-    config_param :lang, :string, :default => ''
+    config_param :lang, :string, :default => nil
     config_param :format, :string, :default => 'compact'
 
     def initialize
@@ -46,42 +46,34 @@ module Fluent
     end
 
     def run
+      client = get_twitter_connection
+      client.on_error do |message|
+        $log.info "in_twitter: unexpected error has occured. #{message}"
+      end
       if @timeline == 'sampling' && @keyword
-        start_twitter_track
+        client.track(@keyword)
       elsif @timeline == 'sampling' && @keyword.nil?
-        start_twitter_sample
+        client.sample
       elsif @timeline == 'userstream'
-        start_twitter_userstream
+        client.userstream
       end
     end
 
-    def start_twitter_track
-      $log.info "starting twitter keyword tracking. tag:#{@tag} lang:#{@lang} keyword:#{@keyword}"
+    def get_twitter_connection
+      notice = "in_twitter: starting #{@timeline}."
+      notice << " tag:#{@tag}"
+      notice << " lang:#{@lang}" unless @lang.nil?
+      notice << " keyword:#{@keyword}" unless @keyword.nil?
+      $log.info notice
       client = TweetStream::Client.new
       client.on_anything(&@any)
-      client.track(@keyword)
-    end
-
-    def start_twitter_sample
-      $log.info "starting twitter sampled streaming. tag:#{@tag} lang:#{@lang}"
-      client = TweetStream::Client.new
-      client.on_anything(&@any)
-      client.sample
-    end
-
-    def start_twitter_userstream
-      $log.info "starting twitter userstream tracking. tag:#{@tag} lang:#{@lang}"
-      client = TweetStream::Client.new
-      client.on_anything(&@any)
-      client.userstream
+      return client
     end
 
     def is_message?(status)
-      if status.instance_of?(Hash)
-        return false if !status.include?(:text)
-        return false if !status.include?(:user)
-        return false if @lang.size > 0 && !@lang.include?(status[:user][:lang])
-      end
+      return false if !status.include?(:text)
+      return false if !status.include?(:user)
+      return false if (!@lang.nil? && @lang != '') && !@lang.include?(status[:user][:lang])
       return true
     end
 
