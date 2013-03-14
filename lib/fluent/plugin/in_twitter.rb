@@ -47,26 +47,28 @@ module Fluent
 
     def run
       client = get_twitter_connection
-      client.on_error do |message|
-        $log.info "in_twitter: unexpected error has occured. #{message}"
-      end
       if @timeline == 'sampling' && @keyword
         client.track(@keyword)
       elsif @timeline == 'sampling' && @keyword.nil?
         client.sample
       elsif @timeline == 'userstream'
         client.userstream
+      #elsif @timeline == 'follow'
+      #  client.follow(@follow_ids)
       end
     end
 
     def get_twitter_connection
-      notice = "in_twitter: starting #{@timeline}."
+      notice = "twitter: starting Twitter Streaming API for #{@timeline}."
       notice << " tag:#{@tag}"
       notice << " lang:#{@lang}" unless @lang.nil?
       notice << " keyword:#{@keyword}" unless @keyword.nil?
       $log.info notice
       client = TweetStream::Client.new
       client.on_anything(&@any)
+      client.on_error do |message|
+        $log.info "twitter: unexpected error has occured. #{message}"
+      end
       return client
     end
 
@@ -79,9 +81,11 @@ module Fluent
 
     def get_message(status)
       case @format
-      when 'raw'
+      when 'nest'
         record = status.inject({}){|f,(k,v)| f[k.to_s] = v; f}
-      when 'compact'
+      when 'flat'
+        # TODO
+      when 'simple'
         record = Hash.new
         record.store('message', status[:text])
         record.store('geo', status[:geo])
