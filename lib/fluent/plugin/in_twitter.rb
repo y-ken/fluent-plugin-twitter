@@ -101,13 +101,13 @@ module Fluent
       Engine.emit(@tag, Engine.now, record)
     end
 
-    def hash_flatten(record, separator = nil)
-      record.inject({}) do |data, (key, value)|
-        key = key.to_s
-        if value.is_a?(Hash)
-          data.merge(hash_flatten(value, key + @flatten_separator))
+    def hash_flatten(record, prefix = nil)
+      record.inject({}) do |d, (k, v)|
+        k = prefix.to_s + k.to_s
+        if v.is_a?(Hash)
+          d.merge(hash_flatten(v, k + @flatten_separator))
         else
-          data.merge(key => value)
+          d.merge(k => v)
         end
       end
     end
