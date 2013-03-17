@@ -1,7 +1,7 @@
 module Fluent
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling)
-    FORMAT_TYPE = %w(compact raw)
+    FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
     config_param :consumer_key, :string
@@ -13,6 +13,7 @@ module Fluent
     config_param :keyword, :string, :default => nil
     config_param :lang, :string, :default => nil
     config_param :format, :string, :default => 'compact'
+    config_param :flatten_separator, :string, :default => '_'
 
     def initialize
       super
@@ -84,7 +85,7 @@ module Fluent
       when 'nest'
         record = status.inject({}){|f,(k,v)| f[k.to_s] = v; f}
       when 'flat'
-        # TODO
+        record = hash_flatten(status)
       when 'simple'
         record = Hash.new
         record.store('message', status[:text])
@@ -98,6 +99,17 @@ module Fluent
         record.store('user_lang', status[:user][:lang])
       end
       Engine.emit(@tag, Engine.now, record)
+    end
+
+    def hash_flatten(record, separator = nil)
+      record.inject({}) do |data, (key, value)|
+        key = key.to_s
+        if value.is_a?(Hash)
+          data.merge(hash_flatten(value, key + @flatten_separator))
+        else
+          data.merge(key => value)
+        end
+      end
     end
   end
 end
