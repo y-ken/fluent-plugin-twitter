@@ -12,7 +12,7 @@ module Fluent
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
     config_param :lang, :string, :default => nil
-    config_param :format, :string, :default => 'compact'
+    config_param :format, :string, :default => 'simple'
     config_param :flatten_separator, :string, :default => '_'
 
     def initialize
