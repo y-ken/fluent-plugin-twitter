@@ -81,6 +81,10 @@ module Fluent
       return false if !status.include?(:text)
       return false if !status.include?(:user)
       return false if (!@lang.nil? && @lang != '') && !@lang.include?(status[:user][:lang])
+      if @timeline == 'userstream' && (!@keyword.nil? && @keyword != '')
+        keyword_regexp = Regexp.new(keyword.gsub(',', '|'))
+        return false if !keyword_regexp.match(status[:text])
+      end
       return true
     end
 
