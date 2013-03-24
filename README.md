@@ -2,7 +2,7 @@ fluent-plugin-twitter
 =====================
 
 ## Component
-Fluentd Input/Output plugin. You can create your own "Twitter Bot" with fluentd messaging system.
+Fluentd Input/Output plugin to process tweets with Twitter Streaming API.
 
 ## Installation
 
@@ -29,9 +29,9 @@ gem install fluent-plugin-twitter
   oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET # Required
   tag                 input.twitter.sampling  # Required
   timeline            sampling                # Required (sampling or userstream)
-  keyword             Ruby,Python             # Optional (userstream not supported yet)
-  lang                ja,en                   # Optional (default none)
-  format              raw                     # Optional (default compact)
+  keyword             Ruby,Python             # Optional (only work with `timeline` is sampling)
+  lang                ja,en                   # Optional
+  output_format       nest                    # Optional (nest or flat or simple[default])
 </source>
 
 <match input.twitter.sampling>
@@ -71,6 +71,9 @@ $ curl http://localhost:8888/notify.twitter -F 'json={"message":"foo"}'
 
 ### Twitter OAuth Guide
 http://pocketstudio.jp/log3/2012/02/12/how_to_get_twitter_apikey_and_token/
+
+### Quick Tour to count a tweet with fluent-plugin-twitter and fluent-plugin-datacounter
+http://qiita.com/items/fe4258b394190f23fece
 
 ## TODO
 patches welcome!

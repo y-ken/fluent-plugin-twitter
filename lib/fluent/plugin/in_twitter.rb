@@ -1,7 +1,7 @@
 module Fluent
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling)
-    FORMAT_TYPE = %w(nest flat simple)
+    OUTPUT_FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
     config_param :consumer_key, :string
@@ -12,7 +12,7 @@ module Fluent
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
     config_param :lang, :string, :default => nil
-    config_param :format, :string, :default => 'simple'
+    config_param :output_format, :string, :default => 'simple'
     config_param :flatten_separator, :string, :default => '_'
 
     def initialize
@@ -23,8 +23,12 @@ module Fluent
     def configure(conf)
       super
 
-      raise Fluent::ConfigError, "timeline value undefined #{@timeline}" if !TIMELINE_TYPE.include?(@timeline)
-      raise Fluent::ConfigError, "format value undefined #{@format}" if !FORMAT_TYPE.include?(@format)
+      if !TIMELINE_TYPE.include?(@timeline)
+        raise Fluent::ConfigError, "timeline value undefined #{@timeline}"
+      end
+      if !OUTPUT_FORMAT_TYPE.include?(@output_format)
+        raise Fluent::ConfigError, "output_format value undefined #{@output_format}"
+      end
 
       TweetStream.configure do |config|
         config.consumer_key = @consumer_key
@@ -81,7 +85,7 @@ module Fluent
     end
 
     def get_message(status)
-      case @format
+      case @output_format
       when 'nest'
         record = status.inject({}){|f,(k,v)| f[k.to_s] = v; f}
       when 'flat'
