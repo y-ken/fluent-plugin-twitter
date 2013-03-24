@@ -95,7 +95,7 @@ module Fluent
         record.store('message', status[:text])
         record.store('geo', status[:geo])
         record.store('place', status[:place])
-        record.store('created_at', status[:place])
+        record.store('created_at', status[:created_at])
         record.store('user_name', status[:user][:name])
         record.store('user_screen_name', status[:user][:screen_name])
         record.store('user_profile_image_url', status[:user][:profile_image_url])
