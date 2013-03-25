@@ -18,6 +18,7 @@ module Fluent
     def initialize
       super
       require 'tweetstream'
+      require 'nkf'
     end
 
     def configure(conf)
@@ -82,8 +83,9 @@ module Fluent
       return false if !status.include?(:user)
       return false if (!@lang.nil? && @lang != '') && !@lang.include?(status[:user][:lang])
       if @timeline == 'userstream' && (!@keyword.nil? && @keyword != '')
-        keyword_regexp = Regexp.new(keyword.gsub(',', '|'))
-        return false if !keyword_regexp.match(status[:text])
+        pattern = NKF::nkf('-WwZ1', @keyword).gsub(/,\s?/, '|')
+        tweet = NKF::nkf('-WwZ1', status[:text])
+        return false if !Regexp.new(pattern, Regexp::IGNORECASE).match(tweet)
       end
       return true
     end
