@@ -76,6 +76,9 @@ http://pocketstudio.jp/log3/2012/02/12/how_to_get_twitter_apikey_and_token/
 http://qiita.com/items/fe4258b394190f23fece
 
 ## TODO
+* support fetching twitter search
+* support fetching specific user userstream
+
 patches welcome!
 
 ## Known Issue
