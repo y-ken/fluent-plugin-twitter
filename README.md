@@ -1,4 +1,4 @@
-fluent-plugin-twitter
+fluent-plugin-twitter [![Build Status](https://travis-ci.org/y-ken/fluent-plugin-twitter.png?branch=master)](https://travis-ci.org/y-ken/fluent-plugin-twitter)
 =====================
 
 ## Component
