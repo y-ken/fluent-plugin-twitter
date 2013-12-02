@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "fluentd"
   s.add_runtime_dependency "em-twitter", ["= 0.2.2"]
   s.add_runtime_dependency "twitter", ["= 4.8.1"]
-  s.add_runtime_dependency "tweetstream"
+  s.add_runtime_dependency "tweetstream", ["= 2.5.0"]
 end
