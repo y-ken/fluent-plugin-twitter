@@ -4,6 +4,18 @@ fluent-plugin-twitter [![Build Status](https://travis-ci.org/y-ken/fluent-plugin
 ## Component
 Fluentd Input/Output plugin to process tweets with Twitter Streaming API.
 
+## Dependency
+
+before use, install dependent library as:
+
+```bash
+# for RHEL/CentOS
+$ sudo yum install openssl-devel
+
+# for Ubuntu/Debian
+$ sudo apt-get install libssl-dev
+```
+
 ## Installation
 
 ### native gem
