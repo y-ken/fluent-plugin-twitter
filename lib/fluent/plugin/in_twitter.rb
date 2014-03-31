@@ -31,6 +31,8 @@ module Fluent
         raise Fluent::ConfigError, "output_format value undefined #{@output_format}"
       end
 
+      @keyword = @keyword.gsub('${hashtag}', '#') unless @keyword.nil?
+
       TweetStream.configure do |config|
         config.consumer_key = @consumer_key
         config.consumer_secret = @consumer_secret
