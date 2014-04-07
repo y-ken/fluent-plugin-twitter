@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rake"
-  s.add_runtime_dependency "fluentd"
-  s.add_runtime_dependency "em-twitter", ["= 0.2.2"]
-  s.add_runtime_dependency "twitter", ["= 4.8.1"]
-  s.add_runtime_dependency "tweetstream", ["= 2.5.0"]
+  s.add_runtime_dependency "fluentd", [">= 0.10.46"]
+  s.add_runtime_dependency "em-twitter"
+  s.add_runtime_dependency "twitter"
+  s.add_runtime_dependency "tweetstream"
 end
