@@ -3,8 +3,10 @@ class Fluent::TwitterOutput < Fluent::Output
 
   config_param :consumer_key, :string
   config_param :consumer_secret, :string
-  config_param :oauth_token, :string
-  config_param :oauth_token_secret, :string
+  config_param :oauth_token, :string, :default => nil
+  config_param :oauth_token_secret, :string, :default => nil
+  config_param :access_token, :string, :default => nil
+  config_param :access_token_secret, :string, :default => nil
 
   def initialize
     super
@@ -14,11 +16,17 @@ class Fluent::TwitterOutput < Fluent::Output
   def configure(conf)
     super
 
+    @access_token = @access_token || @oauth_token
+    @access_token_secret = @access_token_secret || @oauth_token_secret
+    if !@consumer_key or !@consumer_secret or !@access_token or !@access_token_secret
+      raise Fluent::ConfigError, "missing values in consumer_key or consumer_secret or oauth_token or oauth_token_secret"
+    end
+
     @twitter = Twitter::Client.new(
-      :consumer_key => conf['consumer_key'],
-      :consumer_secret => conf['consumer_secret'],
-      :oauth_token => conf['oauth_token'],
-      :oauth_token_secret => conf['oauth_token_secret']
+      :consumer_key => @consumer_key,
+      :consumer_secret => @consumer_secret,
+      :access_token => @access_token,
+      :access_token_secret => @access_token_secret
     )
   end
 

@@ -69,8 +69,8 @@ $ tail -f /var/log/td-agent/td-agent.log
   type twitter
   consumer_key        YOUR_CONSUMER_KEY
   consumer_secret     YOUR_CONSUMER_SECRET
-  oauth_token         YOUR_OAUTH_TOKEN
-  oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET
+  access_token         YOUR_OAUTH_TOKEN
+  access_token_secret  YOUR_OAUTH_TOKEN_SECRET
 </match>
 `````
 
