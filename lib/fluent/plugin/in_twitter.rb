@@ -95,7 +95,7 @@ module Fluent
     def get_message(status)
       case @output_format
       when 'nest'
-        record = status.inject({}){|f,(k,v)| f[k.to_s] = v; f}
+        record = hash_key_to_s(status)
       when 'flat'
         record = hash_flatten(status)
       when 'simple'
@@ -120,6 +120,32 @@ module Fluent
           d.merge(hash_flatten(v, k + @flatten_separator))
         else
           d.merge(k => v)
+        end
+      end
+    end
+
+    def hash_key_to_s(hash)
+      newhash = {}
+      hash.each do |k, v|
+        if v.instance_of?(Hash) then
+          newhash[k.to_s] = hash_key_to_s(v)
+        elsif v.instance_of?(Array) then
+          newhash[k.to_s] = array_key_to_s(v)
+        else
+          newhash[k.to_s] = v
+        end
+      end
+      newhash
+    end
+
+    def array_key_to_s(array)
+      array.map do |v|
+        if v.instance_of?(Hash) then
+          hash_key_to_s(v)
+        elsif v.instance_of?(Array) then
+          array_key_to_s(v)
+        else
+          v
         end
       end
     end
