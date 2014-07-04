@@ -14,10 +14,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # specify any dependencies here; for example:
   s.add_development_dependency "rake"
   s.add_runtime_dependency "fluentd", [">= 0.10.46"]
-  s.add_runtime_dependency "em-twitter"
   s.add_runtime_dependency "twitter"
-  s.add_runtime_dependency "tweetstream"
+  s.add_runtime_dependency "tweetstream", [">= 2.6.1"]
 end
