@@ -22,7 +22,7 @@ class Fluent::TwitterOutput < Fluent::Output
       raise Fluent::ConfigError, "missing values in consumer_key or consumer_secret or oauth_token or oauth_token_secret"
     end
 
-    @twitter = Twitter::Client.new(
+    @twitter = Twitter::REST::Client.new(
       :consumer_key => @consumer_key,
       :consumer_secret => @consumer_secret,
       :access_token => @access_token,
