@@ -41,7 +41,8 @@ gem install fluent-plugin-twitter
   oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET # Required
   tag                 input.twitter.sampling  # Required
   timeline            sampling                # Required (sampling or userstream)
-  keyword             Ruby,Python             # Optional
+  keyword             Ruby,Python             # Optional (keyword is priority than follow_ids)
+  follow_ids          14252,53235             # Optional (integers, not screen names)
   lang                ja,en                   # Optional
   output_format       nest                    # Optional (nest or flat or simple[default])
 </source>

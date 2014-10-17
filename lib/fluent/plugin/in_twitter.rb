@@ -11,6 +11,7 @@ module Fluent
     config_param :tag, :string
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
+    config_param :follow_ids, :string, :default => nil
     config_param :lang, :string, :default => nil
     config_param :output_format, :string, :default => 'simple'
     config_param :flatten_separator, :string, :default => '_'
@@ -57,12 +58,12 @@ module Fluent
       client = get_twitter_connection
       if @timeline == 'sampling' && @keyword
         client.track(@keyword)
-      elsif @timeline == 'sampling' && @keyword.nil?
+      elsif @timeline == 'sampling' && @follow_ids
+        client.follow(@follow_ids)
+      elsif @timeline == 'sampling' && @keyword.nil? && @follow_ids.nil?
         client.sample
       elsif @timeline == 'userstream'
         client.userstream
-      #elsif @timeline == 'follow'
-      #  client.follow(@follow_ids)
       end
     end
 
@@ -71,6 +72,7 @@ module Fluent
       notice << " tag:#{@tag}"
       notice << " lang:#{@lang}" unless @lang.nil?
       notice << " keyword:#{@keyword}" unless @keyword.nil?
+      notice << " follow:#{@follow_ids}" unless @follow_ids.nil? && !@keyword.nil?
       $log.info notice
       client = TweetStream::Client.new
       client.on_anything(&@any)
