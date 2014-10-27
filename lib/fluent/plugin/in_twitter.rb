@@ -100,7 +100,7 @@ module Fluent
         record = hash_flatten(status)
       when 'simple'
         record = Hash.new
-        record.store('message', status[:text])
+        record.store('message', status[:text]).scrub('')
         record.store('geo', status[:geo])
         record.store('place', status[:place])
         record.store('created_at', status[:created_at])
@@ -116,8 +116,10 @@ module Fluent
     def hash_flatten(record, prefix = nil)
       record.inject({}) do |d, (k, v)|
         k = prefix.to_s + k.to_s
-        if v.is_a?(Hash)
+        if v.instance_of?(Hash)
           d.merge(hash_flatten(v, k + @flatten_separator))
+        elsif v.instance_of?(String)
+          d.merge(k => v.scrub(""))
         else
           d.merge(k => v)
         end
@@ -131,6 +133,8 @@ module Fluent
           newhash[k.to_s] = hash_key_to_s(v)
         elsif v.instance_of?(Array) then
           newhash[k.to_s] = array_key_to_s(v)
+        elsif v.instance_of?(String)
+          newhash[k.to_s] = v.scrub('')
         else
           newhash[k.to_s] = v
         end
@@ -144,6 +148,8 @@ module Fluent
           hash_key_to_s(v)
         elsif v.instance_of?(Array) then
           array_key_to_s(v)
+        elsif v.instance_of?(String) then
+          v.scrub('')
         else
           v
         end
