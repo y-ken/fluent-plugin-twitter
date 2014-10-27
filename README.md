@@ -8,9 +8,9 @@ Fluentd Input/Output plugin to process tweets with Twitter Streaming API.
 
 before use, install dependent library as:
 
-```bash
+```
 # for RHEL/CentOS
-$ sudo yum install openssl-devel
+$ sudo yum -y install openssl-devel libcurl libcurl-devel
 
 # for Ubuntu/Debian
 $ sudo apt-get install libssl-dev
@@ -18,20 +18,26 @@ $ sudo apt-get install libssl-dev
 
 ## Installation
 
-### native gem
+install with `gem` or `fluent-gem` command as:
 
-`````
-gem install fluent-plugin-twitter
-`````
+```
+# for fluentd
+$ gem install eventmachine
+$ gem install fluent-plugin-twitter
 
-### td-agent gem
-`````
-/usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-twitter
-`````
+# for td-agent
+$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install eventmachine
+$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-twitter
+
+# for td-agent2
+$ sudo td-agent-gem install eventmachine
+$ sudo td-agent-gem install fluent-plugin-twitter
+```
 
 ## Input Configuration
 
 ### Input Sample
+
 `````
 <source>
   type twitter
@@ -52,7 +58,8 @@ gem install fluent-plugin-twitter
 </match>
 `````
 
-### Debug
+### Testing
+
 `````
 $ tail -f /var/log/td-agent/td-agent.log
 `````
@@ -75,7 +82,8 @@ $ tail -f /var/log/td-agent/td-agent.log
 </match>
 `````
 
-### Debug
+### Testing
+
 `````
 $ curl http://localhost:8888/notify.twitter -F 'json={"message":"foo"}'
 `````
