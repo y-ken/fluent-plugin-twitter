@@ -1,6 +1,6 @@
 module Fluent
   class TwitterInput < Fluent::Input
-    TIMELINE_TYPE = %w(userstream sampling)
+    TIMELINE_TYPE = %w(userstream sampling tracking)
     OUTPUT_FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
@@ -56,9 +56,9 @@ module Fluent
 
     def run
       client = get_twitter_connection
-      if @timeline == 'sampling' && @keyword
+      if ['sampling', 'tracking'].include?(@timeline) && @keyword
         client.track(@keyword)
-      elsif @timeline == 'sampling' && @follow_ids
+      elsif @timeline == 'tracking' && @follow_ids
         client.follow(@follow_ids)
       elsif @timeline == 'sampling' && @keyword.nil? && @follow_ids.nil?
         client.sample

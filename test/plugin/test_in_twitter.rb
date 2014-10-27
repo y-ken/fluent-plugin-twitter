@@ -28,7 +28,7 @@ class TwitterInputTest < Test::Unit::TestCase
       oauth_token         OAUTH_TOKEN
       oauth_token_secret  OAUTH_TOKEN_SECRET
       tag                 input.twitter
-      timeline            sampling
+      timeline            tracking
       keyword             ${hashtag}ruby lang:ja "happy hour" :)
     ]
     assert_equal 'CONSUMER_KEY', d.instance.consumer_key
