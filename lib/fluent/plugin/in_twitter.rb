@@ -1,3 +1,5 @@
+require 'string/scrub' if RUBY_VERSION < '2.1'
+
 module Fluent
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling tracking)
