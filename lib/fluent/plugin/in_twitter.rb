@@ -1,4 +1,4 @@
-require 'string/scrub' if RUBY_VERSION < '2.1'
+require 'string/scrub' if RUBY_VERSION.to_f < 2.1
 
 module Fluent
   class TwitterInput < Fluent::Input
