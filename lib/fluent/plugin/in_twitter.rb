@@ -113,7 +113,7 @@ module Fluent
         record.store('user_time_zone', status[:user][:time_zone])
         record.store('user_lang', status[:user][:lang])
       end
-      Engine.emit(@tag, Engine.now, record)
+      router.emit(@tag, Engine.now, record)
     end
 
     def hash_flatten(record, prefix = nil)
