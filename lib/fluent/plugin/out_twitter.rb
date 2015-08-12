@@ -1,12 +1,12 @@
 class Fluent::TwitterOutput < Fluent::Output
   Fluent::Plugin.register_output('twitter', self)
 
-  config_param :consumer_key, :string
-  config_param :consumer_secret, :string
-  config_param :oauth_token, :string, :default => nil
-  config_param :oauth_token_secret, :string, :default => nil
-  config_param :access_token, :string, :default => nil
-  config_param :access_token_secret, :string, :default => nil
+  config_param :consumer_key, :string, :secret => true
+  config_param :consumer_secret, :string, :secret => true
+  config_param :oauth_token, :string, :default => nil, :secret => true
+  config_param :oauth_token_secret, :string, :default => nil, :secret => true
+  config_param :access_token, :string, :default => nil, :secret => true
+  config_param :access_token_secret, :string, :default => nil, :secret => true
 
   def initialize
     super
