@@ -4,6 +4,11 @@ module Fluent
     OUTPUT_FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
+    # To support Fluentd v0.10.57 or earlier
+    unless method_defined?(:router)
+      define_method("router") { Fluent::Engine }
+    end
+
     config_param :consumer_key, :string, :secret => true
     config_param :consumer_secret, :string, :secret => true
     config_param :oauth_token, :string, :secret => true
