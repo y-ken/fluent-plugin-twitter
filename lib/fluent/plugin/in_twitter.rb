@@ -4,10 +4,10 @@ module Fluent
     OUTPUT_FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
-    config_param :consumer_key, :string
-    config_param :consumer_secret, :string
-    config_param :oauth_token, :string
-    config_param :oauth_token_secret, :string
+    config_param :consumer_key, :string, :secret => true
+    config_param :consumer_secret, :string, :secret => true
+    config_param :oauth_token, :string, :secret => true
+    config_param :oauth_token_secret, :string, :secret => true
     config_param :tag, :string
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
