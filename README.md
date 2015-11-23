@@ -46,9 +46,10 @@ $ sudo td-agent-gem install fluent-plugin-twitter
   oauth_token         YOUR_OAUTH_TOKEN        # Required
   oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET # Required
   tag                 input.twitter.sampling  # Required
-  timeline            tracking                # Required (tracking or sampling or userstream)
+  timeline            tracking                # Required (tracking or sampling or location or userstream)
   keyword             Ruby,Python             # Optional (keyword is priority than follow_ids)
   follow_ids          14252,53235             # Optional (integers, not screen names)
+  locations           31.110283, 129.431631, 45.619283, 145.510175  # Optional (bounding boxes; first pair specifies longitude/latitude of southwest corner)
   lang                ja,en                   # Optional
   output_format       nest                    # Optional (nest or flat or simple[default])
 </source>

@@ -17,6 +17,7 @@ module Fluent
     config_param :timeline, :string
     config_param :keyword, :string, :default => nil
     config_param :follow_ids, :string, :default => nil
+    config_param :locations, :string, :default => nil
     config_param :lang, :string, :default => nil
     config_param :output_format, :string, :default => 'simple'
     config_param :flatten_separator, :string, :default => '_'
@@ -66,6 +67,8 @@ module Fluent
         client.track(@keyword)
       elsif @timeline == 'tracking' && @follow_ids
         client.follow(@follow_ids)
+      elsif @timeline == 'location' && @locations
+        client.locations(@locations)
       elsif @timeline == 'sampling' && @keyword.nil? && @follow_ids.nil?
         client.sample
       elsif @timeline == 'userstream'
