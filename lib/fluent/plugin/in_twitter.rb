@@ -1,6 +1,6 @@
 module Fluent
   class TwitterInput < Fluent::Input
-    TIMELINE_TYPE = %w(userstream sampling tracking)
+    TIMELINE_TYPE = %w(userstream sampling location tracking)
     OUTPUT_FORMAT_TYPE = %w(nest flat simple)
     Plugin.register_input('twitter', self)
 
