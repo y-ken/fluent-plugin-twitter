@@ -112,7 +112,7 @@ module Fluent
       when 'simple'
         record = Hash.new
         record.store('message', status[:text]).scrub('')
-        record.store('geo', status[:geo])
+        record.store('coordinates', status[:coordinates])
         record.store('place', status[:place])
         record.store('created_at', status[:created_at])
         record.store('user_name', status[:user][:name])
