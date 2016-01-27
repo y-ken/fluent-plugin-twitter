@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.email       = ["y.ken.studio@gmail.com"]
   s.homepage    = "https://github.com/y-ken/fluent-plugin-twitter"
   s.summary     = %q{Fluentd Input/Output plugin to collect/process tweets with Twitter Streaming API.}
+  s.license     = "Apache-2.0"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
