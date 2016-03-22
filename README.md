@@ -9,11 +9,11 @@ Fluentd Input/Output plugin to process tweets with Twitter Streaming API.
 before use, install dependent library as:
 
 ```
-# for RHEL/CentOS
-$ sudo yum -y install openssl-devel libcurl libcurl-devel
+# for RHEL/CentOS (eventmachine requires build dependency)
+$ sudo yum -y install gcc gcc-c++ openssl-devel libcurl libcurl-devel
 
-# for Ubuntu/Debian
-$ sudo apt-get install libssl-dev
+# for Ubuntu/Debian (eventmachine requires build dependency)
+$ sudo apt-get install build-essential libssl-dev
 ```
 
 ## Installation
