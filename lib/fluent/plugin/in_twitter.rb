@@ -1,3 +1,5 @@
+require "fluent/input"
+
 module Fluent
   class TwitterInput < Fluent::Input
     TIMELINE_TYPE = %w(userstream sampling location tracking)

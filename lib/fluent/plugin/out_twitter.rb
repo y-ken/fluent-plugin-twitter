@@ -1,3 +1,5 @@
+require "fluent/output"
+
 class Fluent::TwitterOutput < Fluent::Output
   Fluent::Plugin.register_output('twitter', self)
 
