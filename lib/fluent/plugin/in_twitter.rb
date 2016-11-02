@@ -52,13 +52,13 @@ module Fluent::Plugin
       notice << " follow:#{@follow_ids}" unless @follow_ids.nil? && !@keyword.nil?
       log.info notice
 
-      if ['sampling', 'tracking'].include?(@timeline) && @keyword
+      if [:sampling, :tracking].include?(@timeline) && @keyword
         @client.filter(track: @keyword, &method(:handle_object))
-      elsif @timeline == 'tracking' && @follow_ids
+      elsif @timeline == :tracking && @follow_ids
         @client.filter(follow: @follow_ids, &method(:handle_object))
-      elsif @timeline == 'sampling' && @keyword.nil? && @follow_ids.nil?
+      elsif @timeline == :sampling && @keyword.nil? && @follow_ids.nil?
         @client.sample(&method(:handle_object))
-      elsif @timeline == 'userstream'
+      elsif @timeline == :userstream
         @client.user(&method(:handle_object))
       end
     end
@@ -72,7 +72,7 @@ module Fluent::Plugin
     def is_message?(tweet)
       return false if !tweet.is_a?(Twitter::Tweet)
       return false if (!@lang.nil? && @lang != '') && !@lang.include?(tweet.user.lang)
-      if @timeline == 'userstream' && (!@keyword.nil? && @keyword != '')
+      if @timeline == :userstream && (!@keyword.nil? && @keyword != '')
         pattern = NKF::nkf('-WwZ1', @keyword).gsub(/,\s?/, '|')
         tweet = NKF::nkf('-WwZ1', tweet.text)
         return false if !Regexp.new(pattern, Regexp::IGNORECASE).match(tweet)
@@ -82,11 +82,11 @@ module Fluent::Plugin
 
     def get_message(tweet)
       case @output_format
-      when 'nest'
+      when :nest
         record = hash_key_to_s(tweet.to_h)
-      when 'flat'
+      when :flat
         record = hash_flatten(tweet.to_h)
-      when 'simple'
+      when :simple
         record = Hash.new
         record.store('message', tweet.text).scrub('')
         record.store('geo', tweet.geo)
