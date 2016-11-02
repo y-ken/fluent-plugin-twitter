@@ -25,7 +25,6 @@ module Fluent::Plugin
     config_param :output_format, :enum, list: OUTPUT_FORMAT_TYPE, default: :simple
     config_param :flatten_separator, :string, default: '_'
 
-
     def configure(conf)
       super
 
