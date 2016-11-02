@@ -3,12 +3,12 @@ require "fluent/output"
 class Fluent::TwitterOutput < Fluent::Output
   Fluent::Plugin.register_output('twitter', self)
 
-  config_param :consumer_key, :string, :secret => true
-  config_param :consumer_secret, :string, :secret => true
-  config_param :oauth_token, :string, :default => nil, :secret => true
-  config_param :oauth_token_secret, :string, :default => nil, :secret => true
-  config_param :access_token, :string, :default => nil, :secret => true
-  config_param :access_token_secret, :string, :default => nil, :secret => true
+  config_param :consumer_key, :string, secret: true
+  config_param :consumer_secret, :string, secret: true
+  config_param :oauth_token, :string, default: nil, secret: true
+  config_param :oauth_token_secret, :string, default: nil, secret: true
+  config_param :access_token, :string, default: nil, secret: true
+  config_param :access_token_secret, :string, default: nil, secret: true
 
   def initialize
     super
@@ -25,10 +25,10 @@ class Fluent::TwitterOutput < Fluent::Output
     end
 
     @twitter = Twitter::REST::Client.new(
-      :consumer_key => @consumer_key,
-      :consumer_secret => @consumer_secret,
-      :access_token => @access_token,
-      :access_token_secret => @access_token_secret
+      consumer_key: @consumer_key,
+      consumer_secret: @consumer_secret,
+      access_token: @access_token,
+      access_token_secret: @access_token_secret
     )
   end
 

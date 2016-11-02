@@ -15,18 +15,18 @@ module Fluent
       define_method("router") { Fluent::Engine }
     end
 
-    config_param :consumer_key, :string, :secret => true
-    config_param :consumer_secret, :string, :secret => true
-    config_param :access_token, :string, :secret => true
-    config_param :access_token_secret, :string, :secret => true
+    config_param :consumer_key, :string, secret: true
+    config_param :consumer_secret, :string, secret: true
+    config_param :access_token, :string, secret: true
+    config_param :access_token_secret, :string, secret: true
     config_param :tag, :string
     config_param :timeline, :string
-    config_param :keyword, :string, :default => nil
-    config_param :follow_ids, :string, :default => nil
-    config_param :locations, :string, :default => nil
-    config_param :lang, :string, :default => nil
-    config_param :output_format, :string, :default => 'simple'
-    config_param :flatten_separator, :string, :default => '_'
+    config_param :keyword, :string, default: nil
+    config_param :follow_ids, :string, default: nil
+    config_param :locations, :string, default: nil
+    config_param :lang, :string, default: nil
+    config_param :output_format, :string, default: 'simple'
+    config_param :flatten_separator, :string, default: '_'
 
     def initialize
       super
