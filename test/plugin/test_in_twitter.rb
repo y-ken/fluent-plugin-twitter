@@ -21,10 +21,13 @@ class TwitterInputTest < Test::Unit::TestCase
   end
 
   sub_test_case "v0 syntax" do
-    def test_configure
+    def test_empty
       assert_raise(Fluent::ConfigError) {
-        d = create_driver('', syntax: :v0)
+        create_driver('', syntax: :v0)
       }
+    end
+
+    def test_configure
       d = create_driver %[
         consumer_key        CONSUMER_KEY
         consumer_secret     CONSUMER_SECRET
@@ -43,10 +46,13 @@ class TwitterInputTest < Test::Unit::TestCase
   end
 
   sub_test_case "v1 syntax" do
-    def test_v1_multi_keyword
+    def test_empty
       assert_raise(Fluent::ConfigError) {
-        d = create_driver('')
+        create_driver('')
       }
+    end
+
+    def test_multi_keyword
       d = create_driver(%[
         consumer_key        CONSUMER_KEY
         consumer_secret     CONSUMER_SECRET
