@@ -9,31 +9,25 @@ module Fluent::Plugin
 
     helpers :thread
 
+    TIMELINE_TYPE = %i(userstream sampling location tracking)
+    OUTPUT_FORMAT_TYPE = %i(nest flat simple)
+
     config_param :consumer_key, :string, required: true, secret: true
     config_param :consumer_secret, :string, required: true, secret: true
     config_param :access_token, :string, required: true, secret: true
     config_param :access_token_secret, :string, required: true, secret: true
     config_param :tag, :string, required: true
-    config_param :timeline, :string
+    config_param :timeline, :enum, list: TIMELINE_TYPE, required: true
     config_param :keyword, :string, default: nil
     config_param :follow_ids, :string, default: nil
     config_param :locations, :string, default: nil
     config_param :lang, :string, default: nil
-    config_param :output_format, :string, default: 'simple'
+    config_param :output_format, :enum, list: OUTPUT_FORMAT_TYPE, default: :simple
     config_param :flatten_separator, :string, default: '_'
 
-    TIMELINE_TYPE = %w(userstream sampling location tracking)
-    OUTPUT_FORMAT_TYPE = %w(nest flat simple)
 
     def configure(conf)
       super
-
-      if !TIMELINE_TYPE.include?(@timeline)
-        raise Fluent::ConfigError, "timeline value undefined #{@timeline}"
-      end
-      if !OUTPUT_FORMAT_TYPE.include?(@output_format)
-        raise Fluent::ConfigError, "output_format value undefined #{@output_format}"
-      end
 
       @keyword = @keyword.gsub('${hashtag}', '#') unless @keyword.nil?
 
