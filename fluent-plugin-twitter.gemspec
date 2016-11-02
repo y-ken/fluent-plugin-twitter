@@ -19,12 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-unit", ">= 3.1.0"
   s.add_development_dependency "appraisal"
 
-  # Since Fluentd v0.14 requires ruby 2.1 or later.
-  if defined?(RUBY_VERSION) && RUBY_VERSION < "2.1"
-    s.add_runtime_dependency "fluentd", "< 0.14"
-  else
-    s.add_runtime_dependency "fluentd", ">= 0.10.46"
-  end
-  s.add_runtime_dependency "twitter", ">= 5.0.0"
-  s.add_runtime_dependency "string-scrub", "= 0.0.3" if RUBY_VERSION.to_f < 2.1
+  s.add_runtime_dependency "fluentd", [">= 0.10.46", "< 2"]
+  s.add_runtime_dependency "twitter", "~> 5.0"
+  s.add_runtime_dependency "string-scrub", [">= 0.0.3", "<= 0.0.5"]
 end
