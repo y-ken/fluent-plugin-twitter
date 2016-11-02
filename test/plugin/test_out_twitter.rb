@@ -19,10 +19,13 @@ class TwitterOutputTest < Test::Unit::TestCase
   end
 
   sub_test_case "configure" do
-    def test_configure
+    def test_empty
       assert_raise(Fluent::ConfigError) {
-        d = create_driver('')
+        create_driver('')
       }
+    end
+
+    def test_configure
       d = create_driver %[
         consumer_key        CONSUMER_KEY
         consumer_secret     CONSUMER_SECRET
