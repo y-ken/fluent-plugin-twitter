@@ -18,6 +18,7 @@ class TwitterOutputTest < Test::Unit::TestCase
     Fluent::Test::Driver::Output.new(Fluent::Plugin::TwitterOutput).configure(conf)
   end
 
+  sub_test_case "configure" do
   def test_configure
     assert_raise(Fluent::ConfigError) {
       d = create_driver('')
@@ -46,5 +47,5 @@ class TwitterOutputTest < Test::Unit::TestCase
     assert_equal 'ACCESS_TOKEN', d.instance.access_token
     assert_equal 'ACCESS_TOKEN_SECRET', d.instance.access_token_secret
   end
+  end
 end
-
