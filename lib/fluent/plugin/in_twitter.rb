@@ -9,11 +9,11 @@ module Fluent::Plugin
 
     helpers :thread
 
-    config_param :consumer_key, :string, secret: true
-    config_param :consumer_secret, :string, secret: true
-    config_param :access_token, :string, secret: true
-    config_param :access_token_secret, :string, secret: true
-    config_param :tag, :string
+    config_param :consumer_key, :string, required: true, secret: true
+    config_param :consumer_secret, :string, required: true, secret: true
+    config_param :access_token, :string, required: true, secret: true
+    config_param :access_token_secret, :string, required: true, secret: true
+    config_param :tag, :string, required: true
     config_param :timeline, :string
     config_param :keyword, :string, default: nil
     config_param :follow_ids, :string, default: nil
