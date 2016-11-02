@@ -1,4 +1,6 @@
 require 'helper'
+require 'fluent/test/driver/output'
+require 'fluent/plugin/out_twitter'
 
 class TwitterOutputTest < Test::Unit::TestCase
   def setup
@@ -12,8 +14,8 @@ class TwitterOutputTest < Test::Unit::TestCase
     access_token_secret ACCESS_TOKEN_SECRET
   ]
 
-  def create_driver(conf=CONFIG,tag='test')
-    Fluent::Test::OutputTestDriver.new(Fluent::TwitterOutput, tag).configure(conf)
+  def create_driver(conf = CONFIG)
+    Fluent::Test::Driver::Output.new(Fluent::Plugin::TwitterOutput).configure(conf)
   end
 
   def test_configure

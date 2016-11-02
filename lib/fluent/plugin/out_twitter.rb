@@ -1,6 +1,7 @@
-require "fluent/output"
+require "twitter"
+require "fluent/plugin/output"
 
-class Fluent::TwitterOutput < Fluent::Output
+class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
   Fluent::Plugin.register_output('twitter', self)
 
   config_param :consumer_key, :string, secret: true
@@ -12,7 +13,6 @@ class Fluent::TwitterOutput < Fluent::Output
 
   def initialize
     super
-    require 'twitter'
   end
 
   def configure(conf)
@@ -32,20 +32,17 @@ class Fluent::TwitterOutput < Fluent::Output
     )
   end
 
-  def emit(tag, es, chain)
-    es.each do |time,record|
+  def process(tag, es)
+    es.each do |_time, record|
       tweet(record['message'])
     end
-
-    chain.next
   end
 
   def tweet(message)
     begin
       @twitter.update(message)
     rescue Twitter::Error => e
-      $log.error("Twitter Error: #{e.message}")
+      log.error("Twitter Error: #{e.message}")
     end
   end
 end
-
