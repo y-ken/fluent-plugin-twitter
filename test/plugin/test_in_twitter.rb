@@ -20,6 +20,7 @@ class TwitterInputTest < Test::Unit::TestCase
     Fluent::Test::Driver::Input.new(Fluent::Plugin::TwitterInput).configure(conf, syntax: syntax)
   end
 
+  sub_test_case "v0 syntax" do
   def test_configure
     assert_raise(Fluent::ConfigError) {
       d = create_driver('', syntax: :v0)
@@ -39,7 +40,9 @@ class TwitterInputTest < Test::Unit::TestCase
     assert_equal 'ACCESS_TOKEN_SECRET', d.instance.access_token_secret
     assert_equal '#fluentd,fluentd lang:ja', d.instance.keyword
   end
+  end
 
+  sub_test_case "v1 syntax" do
   def test_v1_multi_keyword
     assert_raise(Fluent::ConfigError) {
       d = create_driver('')
@@ -58,5 +61,6 @@ class TwitterInputTest < Test::Unit::TestCase
     assert_equal 'ACCESS_TOKEN', d.instance.access_token
     assert_equal 'ACCESS_TOKEN_SECRET', d.instance.access_token_secret
     assert_equal 'treasuredata,treasure data,#treasuredata,fluentd,#fluentd', d.instance.keyword
+  end
   end
 end
