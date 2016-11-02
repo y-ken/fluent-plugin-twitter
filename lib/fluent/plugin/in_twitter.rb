@@ -1,19 +1,13 @@
+require "fluent/plugin/input"
+
 require 'twitter'
 require 'nkf'
-require 'string/scrub' if RUBY_VERSION.to_f < 2.1
 
-require "fluent/input"
+module Fluent::Plugin
+  class TwitterInput < Fluent::Plugin::Input
+    Fluent::Plugin.register_input('twitter', self)
 
-module Fluent
-  class TwitterInput < Fluent::Input
-    TIMELINE_TYPE = %w(userstream sampling location tracking)
-    OUTPUT_FORMAT_TYPE = %w(nest flat simple)
-    Plugin.register_input('twitter', self)
-
-    # To support Fluentd v0.10.57 or earlier
-    unless method_defined?(:router)
-      define_method("router") { Fluent::Engine }
-    end
+    helpers :thread
 
     config_param :consumer_key, :string, secret: true
     config_param :consumer_secret, :string, secret: true
@@ -28,9 +22,8 @@ module Fluent
     config_param :output_format, :string, default: 'simple'
     config_param :flatten_separator, :string, default: '_'
 
-    def initialize
-      super
-    end
+    TIMELINE_TYPE = %w(userstream sampling location tracking)
+    OUTPUT_FORMAT_TYPE = %w(nest flat simple)
 
     def configure(conf)
       super
@@ -53,11 +46,9 @@ module Fluent
     end
 
     def start
-      @thread = Thread.new(&method(:run))
-    end
-
-    def shutdown
-      Thread.kill(@thread)
+      thread_create(:in_twitter) do
+        run
+      end
     end
 
     def run
@@ -66,7 +57,7 @@ module Fluent
       notice << " lang:#{@lang}" unless @lang.nil?
       notice << " keyword:#{@keyword}" unless @keyword.nil?
       notice << " follow:#{@follow_ids}" unless @follow_ids.nil? && !@keyword.nil?
-      $log.info notice
+      log.info notice
 
       if ['sampling', 'tracking'].include?(@timeline) && @keyword
         @client.filter(track: @keyword, &method(:handle_object))

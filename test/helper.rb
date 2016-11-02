@@ -14,7 +14,5 @@ unless ENV.has_key?('VERBOSE')
   $log = nulllogger
 end
 
-require 'fluent/plugin/in_twitter'
-
 class Test::Unit::TestCase
 end
