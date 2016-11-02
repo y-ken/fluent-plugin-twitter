@@ -2,8 +2,9 @@ sudo: false
 language: ruby
 
 rvm:
-  - 2.2
-  - 2.1
+  - 2.3.1
+  - 2.2.5
+  - 2.1.10
 
 before_install:
   - gem update bundler
@@ -12,17 +13,19 @@ gemfile:
   - Gemfile
   - gemfiles/fluentd_v0.10.gemfile
   - gemfiles/fluentd_v0.12.gemfile
+  - gemfiles/fluentd_v0.14.gemfile
 
 matrix:
   include:
+    - rvm: 2.0.0
+      gemfile: gemfiles/fluentd_v0.10.gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/fluentd_v0.12.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/fluentd_v0.10.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/fluentd_v0.12.gemfile
+  exclude:
     - rvm: 2.3.1
-      gemfile: Gemfile
-    - rvm: 2.0.0
       gemfile: gemfiles/fluentd_v0.10.gemfile
-    - rvm: 2.0.0
-      gemfile: gemfiles/fluentd_v0.12.gemfile
-    - rvm: 1.9.3
-      gemfile: gemfiles/fluentd_v0.10.gemfile
-    - rvm: 1.9.3
-      gemfile: gemfiles/fluentd_v0.12.gemfile
 
