@@ -98,7 +98,7 @@ module Fluent::Plugin
         record.store('user_time_zone', tweet.user.time_zone)
         record.store('user_lang', tweet.user.lang)
       end
-      router.emit(@tag, Engine.now, record)
+      router.emit(@tag, Fluent::Engine.now, record)
     end
 
     def hash_flatten(record, prefix = nil)
