@@ -88,7 +88,7 @@ module Fluent::Plugin
         record = hash_flatten(tweet.to_h)
       when :simple
         record = Hash.new
-        record.store('message', tweet.text).scrub('')
+        record.store('message', tweet.text.scrub(''))
         record.store('geo', tweet.geo)
         record.store('place', tweet.place)
         record.store('created_at', tweet.created_at)
