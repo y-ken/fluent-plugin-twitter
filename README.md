@@ -25,10 +25,6 @@ install with `gem` or `fluent-gem` command as:
 $ gem install eventmachine
 $ gem install fluent-plugin-twitter
 
-# for td-agent
-$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install eventmachine
-$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-twitter -v 0.6.0
-
 # for td-agent2
 $ sudo td-agent-gem install eventmachine
 $ sudo td-agent-gem install fluent-plugin-twitter -v 0.6.0
