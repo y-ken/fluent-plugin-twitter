@@ -4,12 +4,10 @@ require "fluent/plugin/output"
 class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
   Fluent::Plugin.register_output('twitter', self)
 
-  config_param :consumer_key, :string, secret: true
-  config_param :consumer_secret, :string, secret: true
-  config_param :oauth_token, :string, default: nil, secret: true
-  config_param :oauth_token_secret, :string, default: nil, secret: true
-  config_param :access_token, :string, default: nil, secret: true
-  config_param :access_token_secret, :string, default: nil, secret: true
+  config_param :consumer_key, :string, required: true, secret: true
+  config_param :consumer_secret, :string, required: true, secret: true
+  config_param :access_token, :string, required: true, secret: true
+  config_param :access_token_secret, :string, required: true, secret: true
 
   def initialize
     super
@@ -17,12 +15,6 @@ class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
 
   def configure(conf)
     super
-
-    @access_token = @access_token || @oauth_token
-    @access_token_secret = @access_token_secret || @oauth_token_secret
-    if !@consumer_key or !@consumer_secret or !@access_token or !@access_token_secret
-      raise Fluent::ConfigError, "missing values in consumer_key or consumer_secret or oauth_token or oauth_token_secret"
-    end
 
     @twitter = Twitter::REST::Client.new(
       consumer_key: @consumer_key,
