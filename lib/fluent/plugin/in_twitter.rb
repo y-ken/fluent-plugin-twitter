@@ -117,9 +117,9 @@ module Fluent::Plugin
     def hash_key_to_s(hash)
       newhash = {}
       hash.each do |k, v|
-        if v.instance_of?(Hash) then
+        if v.instance_of?(Hash)
           newhash[k.to_s] = hash_key_to_s(v)
-        elsif v.instance_of?(Array) then
+        elsif v.instance_of?(Array)
           newhash[k.to_s] = array_key_to_s(v)
         elsif v.instance_of?(String)
           newhash[k.to_s] = v.scrub('')
@@ -132,11 +132,11 @@ module Fluent::Plugin
 
     def array_key_to_s(array)
       array.map do |v|
-        if v.instance_of?(Hash) then
+        if v.instance_of?(Hash)
           hash_key_to_s(v)
-        elsif v.instance_of?(Array) then
+        elsif v.instance_of?(Array)
           array_key_to_s(v)
-        elsif v.instance_of?(String) then
+        elsif v.instance_of?(String)
           v.scrub('')
         else
           v
