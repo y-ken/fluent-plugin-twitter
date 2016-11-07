@@ -87,16 +87,16 @@ module Fluent::Plugin
       when :flat
         record = hash_flatten(tweet.to_h)
       when :simple
-        record = Hash.new
-        record.store('message', tweet.text.scrub(''))
-        record.store('geo', tweet.geo)
-        record.store('place', tweet.place)
-        record.store('created_at', tweet.created_at)
-        record.store('user_name', tweet.user.name)
-        record.store('user_screen_name', tweet.user.screen_name)
-        record.store('user_profile_image_url', tweet.user.profile_image_url)
-        record.store('user_time_zone', tweet.user.time_zone)
-        record.store('user_lang', tweet.user.lang)
+        record = {}
+        record['message'] = tweet.text.scrub('')
+        record['geo'] = tweet.geo
+        record['place'] = tweet.place
+        record['created_at'] = tweet.created_at
+        record['user_name'] = tweet.user.name
+        record['user_screen_name'] = tweet.user.screen_name
+        record['user_profile_image_url'] = tweet.user.profile_image_url
+        record['user_time_zone'] = tweet.user.time_zone
+        record['user_lang'] = tweet.user.lang
       end
       router.emit(@tag, Fluent::Engine.now, record)
     end
