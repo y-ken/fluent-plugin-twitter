@@ -1,3 +1,7 @@
+require 'twitter'
+require 'nkf'
+require 'string/scrub' if RUBY_VERSION.to_f < 2.1
+
 require "fluent/input"
 
 module Fluent
@@ -26,9 +30,6 @@ module Fluent
 
     def initialize
       super
-      require 'twitter'
-      require 'nkf'
-      require 'string/scrub' if RUBY_VERSION.to_f < 2.1
     end
 
     def configure(conf)
@@ -158,5 +159,14 @@ module Fluent
         end
       end
     end
+  end
+end
+
+# TODO: Remove this monkey patch after release new version of twitter gem
+#
+# See: https://github.com/sferik/twitter/pull/815
+class Twitter::NullObject
+  def to_json(*args)
+    nil.to_json(*args)
   end
 end
