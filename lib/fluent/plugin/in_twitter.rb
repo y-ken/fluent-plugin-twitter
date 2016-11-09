@@ -1,3 +1,7 @@
+require 'twitter'
+require 'nkf'
+require 'string/scrub' if RUBY_VERSION.to_f < 2.1
+
 require "fluent/input"
 
 module Fluent
@@ -26,9 +30,6 @@ module Fluent
 
     def initialize
       super
-      require 'twitter'
-      require 'nkf'
-      require 'string/scrub' if RUBY_VERSION.to_f < 2.1
     end
 
     def configure(conf)
