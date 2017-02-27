@@ -45,8 +45,8 @@ It require td-agent2 (fluentd v0.12) to use keyword with hashtag.
   type twitter
   consumer_key        YOUR_CONSUMER_KEY       # Required
   consumer_secret     YOUR_CONSUMER_SECRET    # Required
-  oauth_token         YOUR_OAUTH_TOKEN        # Required
-  oauth_token_secret  YOUR_OAUTH_TOKEN_SECRET # Required
+  access_token        YOUR_OAUTH_TOKEN        # Required
+  access_token_secret YOUR_OAUTH_TOKEN_SECRET # Required
   tag                 input.twitter.sampling  # Required
   timeline            tracking                # Required (tracking or sampling or location or userstream)
   keyword             'Ruby,Python,#fleuntd'  # Optional (keyword has priority than follow_ids)
@@ -54,6 +54,7 @@ It require td-agent2 (fluentd v0.12) to use keyword with hashtag.
   locations           31.110283, 129.431631, 45.619283, 145.510175  # Optional (bounding boxes; first pair specifies longitude/latitude of southwest corner)
   lang                ja,en                   # Optional
   output_format       nest                    # Optional (nest or flat or simple[default])
+  flatten_separator   _                       # Optional
 </source>
 
 <match input.twitter.sampling>
