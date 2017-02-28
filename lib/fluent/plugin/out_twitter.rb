@@ -4,10 +4,10 @@ require "fluent/plugin/output"
 class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
   Fluent::Plugin.register_output('twitter', self)
 
-  config_param :consumer_key, :string, required: true, secret: true
-  config_param :consumer_secret, :string, required: true, secret: true
-  config_param :access_token, :string, required: true, secret: true
-  config_param :access_token_secret, :string, required: true, secret: true
+  config_param :consumer_key, :string, secret: true
+  config_param :consumer_secret, :string, secret: true
+  config_param :access_token, :string, secret: true
+  config_param :access_token_secret, :string, secret: true
 
   def initialize
     super

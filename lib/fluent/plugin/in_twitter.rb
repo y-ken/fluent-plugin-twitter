@@ -12,12 +12,12 @@ module Fluent::Plugin
     TIMELINE_TYPE = %i(userstream sampling location tracking)
     OUTPUT_FORMAT_TYPE = %i(nest flat simple)
 
-    config_param :consumer_key, :string, required: true, secret: true
-    config_param :consumer_secret, :string, required: true, secret: true
-    config_param :access_token, :string, required: true, secret: true
-    config_param :access_token_secret, :string, required: true, secret: true
-    config_param :tag, :string, required: true
-    config_param :timeline, :enum, list: TIMELINE_TYPE, required: true
+    config_param :consumer_key, :string, secret: true
+    config_param :consumer_secret, :string, secret: true
+    config_param :access_token, :string, secret: true
+    config_param :access_token_secret, :string, secret: true
+    config_param :tag, :string
+    config_param :timeline, :enum, list: TIMELINE_TYPE
     config_param :keyword, :string, default: nil
     config_param :follow_ids, :string, default: nil
     config_param :locations, :string, default: nil
