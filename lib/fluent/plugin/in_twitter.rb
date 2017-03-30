@@ -1,46 +1,32 @@
+require "fluent/plugin/input"
+
 require 'twitter'
 require 'nkf'
-require 'string/scrub' if RUBY_VERSION.to_f < 2.1
 
-require "fluent/input"
+module Fluent::Plugin
+  class TwitterInput < Fluent::Plugin::Input
+    Fluent::Plugin.register_input('twitter', self)
 
-module Fluent
-  class TwitterInput < Fluent::Input
-    TIMELINE_TYPE = %w(userstream sampling location tracking)
-    OUTPUT_FORMAT_TYPE = %w(nest flat simple)
-    Plugin.register_input('twitter', self)
+    helpers :thread
 
-    # To support Fluentd v0.10.57 or earlier
-    unless method_defined?(:router)
-      define_method("router") { Fluent::Engine }
-    end
+    TIMELINE_TYPE = %i(userstream sampling location tracking)
+    OUTPUT_FORMAT_TYPE = %i(nest flat simple)
 
-    config_param :consumer_key, :string, :secret => true
-    config_param :consumer_secret, :string, :secret => true
-    config_param :access_token, :string, :secret => true
-    config_param :access_token_secret, :string, :secret => true
+    config_param :consumer_key, :string, secret: true
+    config_param :consumer_secret, :string, secret: true
+    config_param :access_token, :string, secret: true
+    config_param :access_token_secret, :string, secret: true
     config_param :tag, :string
-    config_param :timeline, :string
-    config_param :keyword, :string, :default => nil
-    config_param :follow_ids, :string, :default => nil
-    config_param :locations, :string, :default => nil
-    config_param :lang, :string, :default => nil
-    config_param :output_format, :string, :default => 'simple'
-    config_param :flatten_separator, :string, :default => '_'
-
-    def initialize
-      super
-    end
+    config_param :timeline, :enum, list: TIMELINE_TYPE
+    config_param :keyword, :string, default: nil
+    config_param :follow_ids, :string, default: nil
+    config_param :locations, :string, default: nil
+    config_param :lang, :string, default: nil
+    config_param :output_format, :enum, list: OUTPUT_FORMAT_TYPE, default: :simple
+    config_param :flatten_separator, :string, default: '_'
 
     def configure(conf)
       super
-
-      if !TIMELINE_TYPE.include?(@timeline)
-        raise Fluent::ConfigError, "timeline value undefined #{@timeline}"
-      end
-      if !OUTPUT_FORMAT_TYPE.include?(@output_format)
-        raise Fluent::ConfigError, "output_format value undefined #{@output_format}"
-      end
 
       @keyword = @keyword.gsub('${hashtag}', '#') unless @keyword.nil?
 
@@ -53,11 +39,9 @@ module Fluent
     end
 
     def start
-      @thread = Thread.new(&method(:run))
-    end
-
-    def shutdown
-      Thread.kill(@thread)
+      thread_create(:in_twitter) do
+        run
+      end
     end
 
     def run
@@ -66,15 +50,15 @@ module Fluent
       notice << " lang:#{@lang}" unless @lang.nil?
       notice << " keyword:#{@keyword}" unless @keyword.nil?
       notice << " follow:#{@follow_ids}" unless @follow_ids.nil? && !@keyword.nil?
-      $log.info notice
+      log.info notice
 
-      if ['sampling', 'tracking'].include?(@timeline) && @keyword
+      if [:sampling, :tracking].include?(@timeline) && @keyword
         @client.filter(track: @keyword, &method(:handle_object))
-      elsif @timeline == 'tracking' && @follow_ids
+      elsif @timeline == :tracking && @follow_ids
         @client.filter(follow: @follow_ids, &method(:handle_object))
-      elsif @timeline == 'sampling' && @keyword.nil? && @follow_ids.nil?
+      elsif @timeline == :sampling && @keyword.nil? && @follow_ids.nil?
         @client.sample(&method(:handle_object))
-      elsif @timeline == 'userstream'
+      elsif @timeline == :userstream
         @client.user(&method(:handle_object))
       end
     end
@@ -88,7 +72,7 @@ module Fluent
     def is_message?(tweet)
       return false if !tweet.is_a?(Twitter::Tweet)
       return false if (!@lang.nil? && @lang != '') && !@lang.include?(tweet.user.lang)
-      if @timeline == 'userstream' && (!@keyword.nil? && @keyword != '')
+      if @timeline == :userstream && (!@keyword.nil? && @keyword != '')
         pattern = NKF::nkf('-WwZ1', @keyword).gsub(/,\s?/, '|')
         tweet = NKF::nkf('-WwZ1', tweet.text)
         return false if !Regexp.new(pattern, Regexp::IGNORECASE).match(tweet)
@@ -98,23 +82,23 @@ module Fluent
 
     def get_message(tweet)
       case @output_format
-      when 'nest'
+      when :nest
         record = hash_key_to_s(tweet.to_h)
-      when 'flat'
+      when :flat
         record = hash_flatten(tweet.to_h)
-      when 'simple'
-        record = Hash.new
-        record.store('message', tweet.text).scrub('')
-        record.store('geo', tweet.geo)
-        record.store('place', tweet.place)
-        record.store('created_at', tweet.created_at)
-        record.store('user_name', tweet.user.name)
-        record.store('user_screen_name', tweet.user.screen_name)
-        record.store('user_profile_image_url', tweet.user.profile_image_url)
-        record.store('user_time_zone', tweet.user.time_zone)
-        record.store('user_lang', tweet.user.lang)
+      when :simple
+        record = {}
+        record['message'] = tweet.text.scrub('')
+        record['geo'] = tweet.geo
+        record['place'] = tweet.place
+        record['created_at'] = tweet.created_at
+        record['user_name'] = tweet.user.name
+        record['user_screen_name'] = tweet.user.screen_name
+        record['user_profile_image_url'] = tweet.user.profile_image_url
+        record['user_time_zone'] = tweet.user.time_zone
+        record['user_lang'] = tweet.user.lang
       end
-      router.emit(@tag, Engine.now, record)
+      router.emit(@tag, Fluent::Engine.now, record)
     end
 
     def hash_flatten(record, prefix = nil)
@@ -133,9 +117,9 @@ module Fluent
     def hash_key_to_s(hash)
       newhash = {}
       hash.each do |k, v|
-        if v.instance_of?(Hash) then
+        if v.instance_of?(Hash)
           newhash[k.to_s] = hash_key_to_s(v)
-        elsif v.instance_of?(Array) then
+        elsif v.instance_of?(Array)
           newhash[k.to_s] = array_key_to_s(v)
         elsif v.instance_of?(String)
           newhash[k.to_s] = v.scrub('')
@@ -148,11 +132,11 @@ module Fluent
 
     def array_key_to_s(array)
       array.map do |v|
-        if v.instance_of?(Hash) then
+        if v.instance_of?(Hash)
           hash_key_to_s(v)
-        elsif v.instance_of?(Array) then
+        elsif v.instance_of?(Array)
           array_key_to_s(v)
-        elsif v.instance_of?(String) then
+        elsif v.instance_of?(String)
           v.scrub('')
         else
           v

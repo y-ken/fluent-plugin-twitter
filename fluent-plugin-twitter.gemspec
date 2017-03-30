@@ -15,11 +15,12 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.required_ruby_version = "> 2.1"
+
   s.add_development_dependency "rake"
   s.add_development_dependency "test-unit", ">= 3.1.0"
   s.add_development_dependency "appraisal"
 
-  s.add_runtime_dependency "fluentd", [">= 0.10.46", "< 2"]
+  s.add_runtime_dependency "fluentd", [">= 0.14.0", "< 2"]
   s.add_runtime_dependency "twitter", "~> 5.0"
-  s.add_runtime_dependency "string-scrub", [">= 0.0.3", "<= 0.0.5"]
 end
