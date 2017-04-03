@@ -145,12 +145,3 @@ module Fluent::Plugin
     end
   end
 end
-
-# TODO: Remove this monkey patch after release new version of twitter gem
-#
-# See: https://github.com/sferik/twitter/pull/815
-class Twitter::NullObject
-  def to_json(*args)
-    nil.to_json(*args)
-  end
-end
