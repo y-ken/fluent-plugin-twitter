@@ -25,6 +25,11 @@ module Fluent::Plugin
     config_param :output_format, :enum, list: OUTPUT_FORMAT_TYPE, default: :simple
     config_param :flatten_separator, :string, default: '_'
 
+    def initialize
+      super
+      @running = false
+    end
+
     def configure(conf)
       super
 
@@ -39,9 +44,15 @@ module Fluent::Plugin
     end
 
     def start
+      @running = true
       thread_create(:in_twitter) do
         run
       end
+    end
+
+    def shutdown
+      @running = false
+      super
     end
 
     def run
@@ -64,6 +75,7 @@ module Fluent::Plugin
     end
 
     def handle_object(object)
+      return unless @running
       if is_message?(object)
         get_message(object)
       end
