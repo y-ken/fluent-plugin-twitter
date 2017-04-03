@@ -16,9 +16,16 @@ $ sudo yum -y install gcc gcc-c++ openssl-devel libcurl libcurl-devel
 $ sudo apt-get install build-essential libssl-dev
 ```
 
+## Requirements
+
+| fluent-plugin-twitter | fluentd    | ruby   |
+|--------------------|------------|--------|
+|  0.6.1            | v0.14.x | >= 2.1 |
+|  0.5.4            | v0.12.x | >= 1.9 |
+
 ## Installation
 
-install with `gem` or `fluent-gem` command as:
+install with `gem` or `td-agent-gem` command as:
 
 ```
 # for fluentd
@@ -27,7 +34,7 @@ $ gem install fluent-plugin-twitter
 
 # for td-agent2
 $ sudo td-agent-gem install eventmachine
-$ sudo td-agent-gem install fluent-plugin-twitter -v 0.6.0
+$ sudo td-agent-gem install fluent-plugin-twitter -v 0.5.4
 ```
 
 ## Input Configuration
