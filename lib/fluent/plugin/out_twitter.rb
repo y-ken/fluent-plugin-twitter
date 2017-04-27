@@ -9,6 +9,13 @@ class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
   config_param :access_token, :string, secret: true
   config_param :access_token_secret, :string, secret: true
 
+  config_section :proxy, multi: false do
+    config_param :host, :string
+    config_param :port, :string
+    config_param :username, :string, default: nil
+    config_param :password, :string, default: nil, secret: true
+  end
+
   def initialize
     super
   end
@@ -16,12 +23,13 @@ class Fluent::Plugin::TwitterOutput < Fluent::Plugin::Output
   def configure(conf)
     super
 
-    @twitter = Twitter::REST::Client.new(
-      consumer_key: @consumer_key,
-      consumer_secret: @consumer_secret,
-      access_token: @access_token,
-      access_token_secret: @access_token_secret
-    )
+    @twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key = @consumer_key
+      config.consumer_secret = @consumer_secret
+      config.access_token = @access_token
+      config.access_token_secret = @access_token_secret
+      config.proxy = @proxy.to_h if @proxy
+    end
   end
 
   def process(tag, es)

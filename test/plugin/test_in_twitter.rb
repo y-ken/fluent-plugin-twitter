@@ -69,4 +69,59 @@ class TwitterInputTest < Test::Unit::TestCase
       assert_equal 'treasuredata,treasure data,#treasuredata,fluentd,#fluentd', d.instance.keyword
     end
   end
+
+  sub_test_case "proxy" do
+    test "simple" do
+      conf = %[
+        consumer_key        CONSUMER_KEY
+        consumer_secret     CONSUMER_SECRET
+        access_token        ACCESS_TOKEN
+        access_token_secret ACCESS_TOKEN_SECRET
+        tag                 input.twitter
+        timeline            tracking
+        keyword             'treasuredata,treasure data,#treasuredata,fluentd,#fluentd'
+        <proxy>
+          host proxy.example.com
+          port 8080
+          username proxyuser
+          password proxypass
+        </proxy>
+      ]
+      d = create_driver(conf)
+      expected = {
+        host: "proxy.example.com",
+        port: "8080",
+        username: "proxyuser",
+        password: "proxypass"
+      }
+      assert_equal(expected, d.instance.proxy.to_h)
+    end
+
+    test "multi proxy is not supported" do
+      conf = %[
+        consumer_key        CONSUMER_KEY
+        consumer_secret     CONSUMER_SECRET
+        access_token        ACCESS_TOKEN
+        access_token_secret ACCESS_TOKEN_SECRET
+        tag                 input.twitter
+        timeline            tracking
+        keyword             'treasuredata,treasure data,#treasuredata,fluentd,#fluentd'
+        <proxy>
+          host proxy.example.com
+          port 8080
+          username proxyuser
+          password proxypass
+        </proxy>
+        <proxy>
+          host proxy.example.com
+          port 8081
+          username proxyuser
+          password proxypass
+        </proxy>
+      ]
+      assert_raise(Fluent::ConfigError) do
+        create_driver(conf)
+      end
+    end
+  end
 end
