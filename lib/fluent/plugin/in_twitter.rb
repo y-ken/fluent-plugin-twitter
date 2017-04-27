@@ -25,6 +25,13 @@ module Fluent::Plugin
     config_param :output_format, :enum, list: OUTPUT_FORMAT_TYPE, default: :simple
     config_param :flatten_separator, :string, default: '_'
 
+    config_section :proxy, multi: false do
+      config_param :host, :string
+      config_param :port, :string
+      config_param :username, :string, default: nil
+      config_param :password, :string, default: nil, secret: true
+    end
+
     def initialize
       super
       @running = false
@@ -40,6 +47,7 @@ module Fluent::Plugin
         config.consumer_secret = @consumer_secret
         config.access_token = @access_token
         config.access_token_secret = @access_token_secret
+        config.proxy = @proxy.to_h if @proxy
       end
     end
 
@@ -52,6 +60,7 @@ module Fluent::Plugin
 
     def shutdown
       @running = false
+      @client.close if @client.respond_to?(:close)
       super
     end
 

@@ -65,6 +65,26 @@ It require td-agent2 (fluentd v0.12) to use keyword with hashtag.
 </match>
 `````
 
+### Proxy support
+
+```
+<source>
+  @type twitter
+  consumer_key        YOUR_CONSUMER_KEY        # Required
+  consumer_secret     YOUR_CONSUMER_SECRET     # Required
+  access_token        YOUR_ACCESS_TOKEN        # Required
+  access_token_secret YOUR_ACCESS_TOKEN_SECRET # Required
+  tag                 input.twitter.sampling   # Required
+  timeline            tracking                 # Required (tracking or sampling or location or userstream)
+  <proxy>
+    host proxy.example.com                     # Required
+    port 8080                                  # Required
+    username proxyuser                         # Optional
+    password proxypass                         # Optional
+  </proxy>
+</source>
+```
+
 ### Testing
 
 `````
@@ -88,6 +108,24 @@ $ tail -f /var/log/td-agent/td-agent.log
   access_token_secret YOUR_ACCESS_TOKEN_SECRET
 </match>
 `````
+
+### Proxy support
+
+```
+<match notify.twitter>
+  @type twitter
+  consumer_key        YOUR_CONSUMER_KEY
+  consumer_secret     YOUR_CONSUMER_SECRET
+  access_token        YOUR_ACCESS_TOKEN
+  access_token_secret YOUR_ACCESS_TOKEN_SECRET
+  <proxy>
+    host proxy.example.com
+    port 8080
+    username proxyuser
+    password proxypass
+  </proxy>
+</match>
+```
 
 ### Testing
 

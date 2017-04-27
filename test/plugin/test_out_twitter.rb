@@ -37,5 +37,52 @@ class TwitterOutputTest < Test::Unit::TestCase
       assert_equal 'ACCESS_TOKEN', d.instance.access_token
       assert_equal 'ACCESS_TOKEN_SECRET', d.instance.access_token_secret
     end
+
+    def test_proxy
+      conf = %[
+        consumer_key        CONSUMER_KEY
+        consumer_secret     CONSUMER_SECRET
+        access_token        ACCESS_TOKEN
+        access_token_secret ACCESS_TOKEN_SECRET
+        <proxy>
+          host proxy.example.com
+          port 8080
+          username proxyuser
+          password proxypass
+        </proxy>
+      ]
+      d = create_driver(conf)
+      expected = {
+        host: "proxy.example.com",
+        port: "8080",
+        username: "proxyuser",
+        password: "proxypass"
+      }
+      assert_equal(expected, d.instance.proxy.to_h)
+    end
+
+    def test_multi_proxy
+      conf = %[
+        consumer_key        CONSUMER_KEY
+        consumer_secret     CONSUMER_SECRET
+        access_token        ACCESS_TOKEN
+        access_token_secret ACCESS_TOKEN_SECRET
+        <proxy>
+          host proxy.example.com
+          port 8080
+          username proxyuser
+          password proxypass
+        </proxy>
+        <proxy>
+          host proxy.example.com
+          port 8081
+          username proxyuser
+          password proxypass
+        </proxy>
+      ]
+      assert_raise(Fluent::ConfigError) do
+        create_driver(conf)
+      end
+    end
   end
 end
