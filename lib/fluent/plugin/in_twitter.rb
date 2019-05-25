@@ -92,7 +92,7 @@ module Fluent::Plugin
 
     def is_message?(tweet)
       return false if !tweet.is_a?(Twitter::Tweet)
-      return false if (!@lang.nil? && @lang != '') && !@lang.include?(tweet.user.lang)
+      return false if (!@lang.nil? && @lang != '') && !@lang.include?(tweet.lang)
       if @timeline == :userstream && (!@keyword.nil? && @keyword != '')
         pattern = NKF::nkf('-WwZ1', @keyword).gsub(/,\s?/, '|')
         tweet = NKF::nkf('-WwZ1', tweet.text)
